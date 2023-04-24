@@ -1,0 +1,19 @@
+FROM python:3.8-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+
+ENV PYTHONUNBUFFERED=1
+
+COPY requirements.txt .
+RUN python -m pip install -r requirements.txt
+
+COPY file_system /file_system
+COPY config.ini /file_system/
+
+RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /file_system
+USER appuser
+
+WORKDIR /file_system
+CMD ["python", "file_system.py", "config.ini"]
+
+EXPOSE 5006

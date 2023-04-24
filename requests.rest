@@ -1,55 +1,74 @@
-### Начало работы всей системы, стартует загрузку устройства с заданными настройками и версией
-
-POST http://0.0.0.0:6064/start HTTP/1.1
-content-type: application/json
-auth: very-secure-token
-
-### Отправка (эмуляция аппаратного включения) ключа технического специалиста (для работы с системой нужны ключи и технического специалиста и специалиста по безопасности)
-
-POST http://0.0.0.0:6064/key_in HTTP/1.1
+### Отработка сценария тревоги
+POST http://localhost:5002/ingest HTTP/1.1
 content-type: application/json
 auth: very-secure-token
 
 {
-    "name": "Technical"
-} 
+    "url": "http://sensor_value_handler:5006",
+    "value": 15,
+    "in_source": {"Security": "connect", "Technical": "connect"},
+    "target": "sensor_value_handler",
+    "digest": "G1I9Qoi_W7OBrbMwH7TESx3zUo47G-ruw3",
+    "operation": "check_alarm",
+    "digest_alg": "sha256"
+}
 
-### Отправка ключа специалиста по безопасности
-
-POST http://0.0.0.0:6064/key_in HTTP/1.1
+### Отработка сценария вставки ключей
+POST http://localhost:5002/ingest HTTP/1.1
 content-type: application/json
 auth: very-secure-token
 
 {
-    "name": "Security"
-} 
+    "url": "http://sensor_value_handler:5006",
+    "value": 15,
+    "in_source": {"Security": "connect", "Technical": "connect"},
+    "target": "monitor",
+    "digest": "G1I9Qoi_W7OBrbMwH7TESx3zUo47G-ruw3",
+    "operation": "insert_key",
+    "digest_alg": "sha256"
+}
 
-### Извлечение ключа технического специалиста (служебный порт прекращает работу только по извлечению обоих ключей)
-
-POST http://0.0.0.0:6064/key_out HTTP/1.1
+### Отработка сценария смены значения тревоги
+POST http://localhost:5002/ingest HTTP/1.1
 content-type: application/json
 auth: very-secure-token
 
 {
-    "name": "Technical"
-} 
+    "url": "http://sensor_value_handler:5006",
+    "value": 15,
+    "in_source": {"Security": "connect", "Technical": "connect"},
+    "target": "sensor_value_handler",
+    "digest": "G1I9Qoi_W7OBrbMwH7TESx3zUo47G-ruw3",
+    "operation": "update_coef",
+    "digest_alg": "sha256"
+}
 
-### Извлечение ключа специалиста по безопасности (служебный порт прекращает работу только по извлечению обоих ключей)
-
-POST http://0.0.0.0:6064/key_out HTTP/1.1
+### Отработка сценария вынимание ключей
+POST http://localhost:5002/ingest HTTP/1.1
 content-type: application/json
 auth: very-secure-token
 
 {
-    "name": "Security"
-} 
+    "url": "http://sensor_value_handler:5006",
+    "value": 15,
+    "in_source": {"Security": "connect", "Technical": "connect"},
+    "target": "monitor",
+    "digest": "G1I9Qoi_W7OBrbMwH7TESx3zUo47G-ruw3",
+    "operation": "pulled_out_key",
+    "digest_alg": "sha256"
+}
 
-### Остановка всех процессов в системе, требует start после себя, чтобы начать выполнение повторно с обнулением изменений в значениях переменных (но не в файлах настроек и версий).
-
-POST http://0.0.0.0:6064/stop HTTP/1.1
+### Отработка сценария обновления системы
+POST http://localhost:5002/ingest HTTP/1.1
 content-type: application/json
 auth: very-secure-token
 
 {
-    
-} 
+    "url": "http://file_server:6001",
+    "value": 15,
+    "in_source": {"Security": "connect", "Technical": "connect"},
+    "target": "system",
+    "digest": "G1I9Qoi_W7OBrbMwH7TESx3zUo47G-ruw3",
+    "operation": "update_system",
+    "digest_alg": "sha256"
+}

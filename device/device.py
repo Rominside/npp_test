@@ -139,7 +139,7 @@ def out_d(operation, msg):
         )
 
 
-#запись обновления
+#запись обновления -- здесь записываются обновления ОС
 def commit(name, payload):
     stored = False
     update_payload = base64.b64decode(payload)
@@ -248,7 +248,8 @@ def key_in():
             key_t = True
         log("Key input event: " + str(content['name']))
 
-        if key_t and key_s:
+        if key_t and key_s: # здесь происходит получение обновлений от file-server 
+            # по сути здесь происходит download, а в функции commit происходит upload
             log("Service input port activated")
             payload_n = ''
             payload_s = ''
